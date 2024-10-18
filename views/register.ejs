@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://kit.fontawesome.com/8afef4d5c4.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background: #FFF3E9;
+        }
+    </style>
+</head>
+<body>
+    <!-- NavBar Section -->
+    <nav class="navbar">
+        <div class="container">
+            <section class="navbar-items">
+                <!-- Logo Section -->
+                <div class="logo">
+                    <a href="/"><img src="/images/assets/logo.png" alt="Logo"></a>
+                </div>
+
+                <!-- Search Bar Section -->
+                <div class="search-bar-home">
+                    <div class="input-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search" id="search-input" oninput="searchBooks()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count"><%= cartCount %></span>
+                    </div>
+                </div>
+                <!-- Button Group Section -->
+                <div class="btn-group">
+                    <% if (user) { %> <!-- Use 'user' from res.locals -->
+                        <a class="btn-nobg baloo-bhaijaan-2-400" href="/order">Order</a>
+                        <a class="btn-bg baloo-bhaijaan-2-400" href="/logout">Sign out</a>
+                    <% } else { %>
+                        <a class="btn-nobg baloo-bhaijaan-2-400" href="/login">Sign In</a>
+                        <a class="btn-bg baloo-bhaijaan-2-400" href="/register">Sign Up</a>
+                    <% } %>
+                </div>
+            </section>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="login">
+            <div class="image-section">
+                <img src="/images/assets/aa.png" alt="Illustration">
+            </div>
+            <div class="login-section">
+                <h2>Sign up</h2>
+                <form action="/register" method="POST">
+                    <div class="input-group flex">
+                        <div class="input-box">
+                            <label for="firstname">First name</label>
+                            <div class="warp-input">
+                                <input type="text" id="firstname" name="firstname" placeholder="John" required>
+                            </div>
+                        </div>
+                        <div class="input-box">
+                            <label for="lastname">Last name</label>
+                            <div class="warp-input">
+                                <input type="text" id="lastname" name="lastname" placeholder="Doe" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <div class="warp-input">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="email" name="email" placeholder="example@mail.com" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <div class="warp-input">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" placeholder="*********" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <div class="warp-input">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="*********" required>
+                        </div>
+                    </div>
+                    <p id="error" style="display: <%= error ? 'block' : 'none' %>;"> <%= error ? error : '' %> </p>
+                    <button type="submit" class="login-btn">Sign Up</button>
+                    <div class="signup-link">
+                        Already have an account? <a href="/login">Sign In here</a>
+                    </div>
+                </form>                
+            </div>
+        </div>
+    </div>
+    <script>
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const error = document.getElementById('error');
+
+            if (password !== confirmPassword) {
+                e.preventDefault(); // Prevent form submission
+                error.textContent = '* Passwords do not match.';
+                error.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+ให้สร้าง database ใน mongodb ชื่อ bookstore
+และสร้าง collection ทั้งหมด 4 อันได้แก่
+- users
+- orders
+- carts
+- books
+โดยให้ import books.json ลงใน collection "books"
+
+หลังจากนั้นเปิด project พิมพ์ npm i ใน terminal และหลังติดตั้งสำเร็จ
+ให้พิมพ์ npm run dev เพื่อ start project จากนั้นจึงเข้าไปที่
+localhost:3000

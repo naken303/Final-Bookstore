@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Store</title>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://kit.fontawesome.com/8afef4d5c4.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background: #FFF3E9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cart Popup Structure -->
+    <div id="cart-popup-overlay"></div>
+
+    <div id="cart-popup">
+        <div class="cart-popup-header">
+            <h3>Your Cart</h3>
+            <button id="close-cart-popup" class="close-popup-btn">&times;</button>
+        </div>
+        <div id="cart-items">
+            <!-- Cart items will be dynamically inserted here -->
+        </div>
+        <div class="cart-popup-footer">
+            <div class="total-price">
+                <span>Total: </span>
+                <span id="cart-total-price">0 บาท</span>
+            </div>
+            <a href="/checkout" class="confirm-payment-btn">Confirm Payment</a>
+        </div>
+    </div>
+
+
+    <!-- NavBar Section -->
+    <nav class="navbar">
+        <div class="container">
+            <section class="navbar-items">
+                <!-- Logo Section -->
+                <div class="logo">
+                    <a href="/"><img src="/images/assets/logo.png" alt="Logo"></a>
+                </div>
+
+                <!-- Search Bar Section -->
+                <div class="search-bar-home">
+                    <div class="input-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search" id="search-input" oninput="searchBooks()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count"><%= cartCount %></span>
+                    </div>
+                </div>
+                <!-- Button Group Section -->
+                <div class="btn-group">
+                    <% if (user) { %> <!-- Use 'user' from res.locals -->
+                        <a class="btn-nobg baloo-bhaijaan-2-400" href="/order">Order</a>
+                        <a class="btn-bg baloo-bhaijaan-2-400" href="/logout">Sign out</a>
+                    <% } else { %>
+                        <a class="btn-nobg baloo-bhaijaan-2-400" href="/login">Sign In</a>
+                        <a class="btn-bg baloo-bhaijaan-2-400" href="/register">Sign Up</a>
+                    <% } %>
+                </div>
+            </section>
+        </div>
+    </nav>
+
+    <!-- Head Banner Section -->
+    <div class="banner">
+        <div class="banner-slides">
+            <img src="/images/assets/banner1.jpg" alt="Banner 1" class="slide">
+            <img src="/images/assets/banner2.jpg" alt="Banner 2" class="slide">
+            <img src="/images/assets/banner3.jpg" alt="Banner 3" class="slide">
+        </div>
+        <button class="prev"><i class="fas fa-chevron-left"></i></button>
+        <button class="next"><i class="fas fa-chevron-right"></i></button>
+        <div class="dots-container">
+            <button class="dot active" data-slide="0"></button>
+            <button class="dot" data-slide="1"></button>
+            <button class="dot" data-slide="2"></button>
+        </div>
+    </div>   
+
+    <!-- Top 20 Books Section -->
+    <section class="top-20-books">
+        <div class="container">
+            <h2 style="margin-top: 20px;">หนังสือขายดี TOP 20</h2>
+        </div>
+        <div class="book-slider">
+            <% slideBooks.forEach(book => { %>
+                <div class="book-item">
+                    <img src="/images/books_cover/<%= book.imageUrl %>" alt="Book 1" class="book-cover" onerror="this.onerror=null;this.src='/images/books_cover/default_cover.jpg';">
+                    <a class="book-details" href="/book/<%= book.id %>">
+                        <div class="book-title"><%= book.title %></div>
+                        <div class="book-count">คงเหลือ <%= book.qty %> เล่ม</div>
+                        <div class="book-price"><%= book.price %> บาท</div>
+                        <% if (book.qty > 0) { %>
+                            <button class="add-to-cart-btn" onclick="addToCart('<%= book.id %>')">Add to Cart</button>
+                            <% } else { %>
+                                <button class="add-to-cart-btn disable" disabled >Out of stock</button>
+                        <% } %>
+                    </a>
+                </div>
+            <% }) %>
+        </div>
+    </section>
+    
+    <!-- Category -->
+    <section class="category">
+        <div class="container">
+            <h2 style="margin-top: 20px;">ประเภทหนังสือ</h2>
+            <div class="warp-slider-category">
+                <div class="category-slider">
+                    <a class="category-btn" href="/">หนังสือแนะนำ</a>
+                    <% categorys.forEach(category => { %>
+                        <a class="category-btn" href="/category/<%= category.name%>"><%= category.name%></a>
+                    <% }) %>
+                </div>
+                <button class="pre-category-btn"><i class="fas fa-chevron-left"></i></button>
+                <button class="next-category-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <section id="result"></section>
+
+    <div id="results-container">
+
+        
+
+        <% if (typeof cateBooks !== 'undefined') { %>
+            <section class="book-lists">
+                <div class="container">
+                    <div class="heading-text">
+                        <h2>Category: <%= nameCate %></h2>
+                    </div>
+                    <div class="books">
+                        <% cateBooks.forEach(book => { %>
+                            <div class="book-card">
+                                <a href="/book/<%= book.id %>"><img src="/images/books_cover/<%= book.imageUrl %>" alt="Book cover" class="book-cover" onerror="this.onerror=null;this.src='/images/books_cover/default_cover.jpg';"></a>
+                                <div class="book-info">
+                                    <div class="text-info">
+                                        <p class="book-title-card"><%= book.title %></p>
+                                        <p class="book-availability">คงเหลือ <%= book.qty %> เล่ม</p>
+                                        <p class="book-price"><%= book.price %> บาท</p>
+                                    </div>
+                                    <% if (book.qty > 0) { %>
+                                        <button class="add-to-cart-btn" onclick="addToCart('<%= book.id %>')">Add to Cart</button>
+                                        <% } else { %>
+                                            <button class="add-to-cart-btn disable" disabled >Out of stock</button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            </section>
+        <% } else { %>
+            <section class="book-lists">
+                <div class="container">
+                    <div class="heading-text">
+                        <h2>นิยายสืบสวน สอบสวน ที่ควรติดตาม !!</h2>
+                        <a href="/category/<%= showBook[0].categoryName%>">ดูทั้งหมด</a>
+                    </div>
+                    <div class="books">
+                        <% showBook[0].books.forEach(book => { %>
+                            <div class="book-card">
+                                <a href="/book/<%= book.id %>"><img src="/images/books_cover/<%= book.imageUrl %>" alt="Book cover" class="book-cover" onerror="this.onerror=null;this.src='/images/books_cover/default_cover.jpg';"></a>
+                                <div class="book-info">
+                                    <div class="text-info">
+                                        <p class="book-title-card"><%= book.title %></p>
+                                        <p class="book-availability">คงเหลือ <%= book.qty %> เล่ม</p>
+                                        <p class="book-price"><%= book.price %> บาท</p>
+                                    </div>
+                                    <% if (book.qty > 0) { %>
+                                        <button class="add-to-cart-btn" onclick="addToCart('<%= book.id %>')">Add to Cart</button>
+                                        <% } else { %>
+                                            <button class="add-to-cart-btn disable" disabled >Out of stock</button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            </section>
+            <section class="book-lists">
+                <div class="container">
+                    <div class="heading-text">
+                        <h2>พัฒนาตัวเองไม่หยุด กับหนังสือหมวด จิตวิทยา HOW TO</h2>
+                        <a href="/category/<%= showBook[1].categoryName%>">ดูทั้งหมด</a>
+                    </div>
+                    <div class="books">
+                        <% showBook[1].books.forEach(book => { %>
+                            <div class="book-card">
+                                <a href="/book/<%= book.id %>"><img src="/images/books_cover/<%= book.imageUrl %>" alt="Book cover" class="book-cover" onerror="this.onerror=null;this.src='/images/books_cover/default_cover.jpg';"></a>
+                                <div class="book-info">
+                                    <div class="text-info">
+                                        <p class="book-title-card"><%= book.title %></p>
+                                        <p class="book-availability">คงเหลือ <%= book.qty %> เล่ม</p>
+                                        <p class="book-price"><%= book.price %> บาท</p>
+                                    </div>
+                                    <% if (book.qty > 0) { %>
+                                        <button class="add-to-cart-btn" onclick="addToCart('<%= book.id %>')">Add to Cart</button>
+                                        <% } else { %>
+                                            <button class="add-to-cart-btn disable" disabled >Out of stock</button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            </section>
+            <section class="book-lists">
+                <div class="container">
+                    <div class="heading-text">
+                        <h2>รวมลิสต์หนังสือฮีลใจน่าอ่าน</h2>
+                        <a href="/category/<%= showBook[2].categoryName%>">ดูทั้งหมด</a>
+                    </div>
+                    <div class="books">
+                        <% showBook[2].books.forEach(book => { %>
+                            <div class="book-card">
+                                <a href="/book/<%= book.id %>"><img src="/images/books_cover/<%= book.imageUrl %>" alt="Book cover" class="book-cover" onerror="this.onerror=null;this.src='/images/books_cover/default_cover.jpg';"></a>
+                                <div class="book-info">
+                                    <div class="text-info">
+                                        <p class="book-title-card"><%= book.title %></p>
+                                        <p class="book-availability">คงเหลือ <%= book.qty %> เล่ม</p>
+                                        <p class="book-price"><%= book.price %> บาท</p>
+                                    </div>
+                                    <% if (book.qty > 0) { %>
+                                        <button class="add-to-cart-btn" onclick="addToCart('<%= book.id %>')">Add to Cart</button>
+                                        <% } else { %>
+                                            <button class="add-to-cart-btn disable" disabled >Out of stock</button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            </section>
+        
+            <section class="book-lists">
+                <div class="container">
+                    <div class="heading-text">
+                        <h2>หนังสืออื่น ๆ</h2>
+                        <a href="/category/<%= showBook[3].categoryName%>">ดูทั้งหมด</a>
+                    </div>
+                    <div class="books">
+                        <% showBook[3].books.forEach(book => { %>
+                            <div class="book-card">
+                                <a href="/book/<%= book.id %>"><img src="/images/books_cover/<%= book.imageUrl %>" alt="Book cover" class="book-cover" onerror="this.onerror=null;this.src='/images/books_cover/default_cover.jpg';"></a>
+                                <div class="book-info">
+                                    <div class="text-info">
+                                        <p class="book-title-card"><%= book.title %></p>
+                                        <p class="book-availability">คงเหลือ <%= book.qty %> เล่ม</p>
+                                        <p class="book-price"><%= book.price %> บาท</p>
+                                    </div>
+                                    <% if (book.qty > 0) { %>
+                                        <button class="add-to-cart-btn" onclick="addToCart('<%= book.id %>')">Add to Cart</button>
+                                        <% } else { %>
+                                            <button class="add-to-cart-btn disable" disabled >Out of stock</button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            </section>
+        <% } %>
+    </div>
+
+    <div class="footer-image">
+        <div class="container">
+            <div class="f-image">
+                <img src="/images/assets/banner3.jpg" alt="">
+            </div>
+        </div>
+    </div>
+
+    <section class="footer">    
+        <div class="container">
+            <div class="footer-flex">
+                <img src="/images/assets/logo.png" alt="">
+                <div class="warp-link">
+                    <a href="/aboutus">ABOUT US</a>
+                    <a href="/contact">CONTACT</a>
+                    <a href="/faq">FAQ</a>
+                </div>
+            </div>
+        </div>
+    </section class="footer">
+    <script src="/js/index.js"></script>
+    <script src="/js/scripts.js"></script>
+    <% if (typeof alertMessage !== 'undefined') { %>
+        <script>
+            alert('<%= alertMessage %>');
+        </script>
+        <% delete alertMessage; %> <!-- Clear the alert message from the session -->
+    <% } %>
+</body>
+</html>

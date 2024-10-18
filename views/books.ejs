@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Book lists</title>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://kit.fontawesome.com/8afef4d5c4.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            overflow: hidden;
+        }
+
+        #addNewBook {
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+
+        #addNewBook.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-flex-container">
+        <!-- side menu section -->
+        <section class="side-menu">
+            <div class="welcome">
+                <h1>Welcome, admin</h1>
+            </div>
+            <div class="menu">
+                <div class="menu-list">
+                    <a href="/book" class="menu-item active"><i class="fa-solid fa-book"></i><span class="text-menu">Book list</span></a>
+                    <a href="/user" class="menu-item "><i class="fa-solid fa-address-book"></i><span class="text-menu">User list</span></a>
+                    <!-- <a href="#" class="menu-item"><i class="fa-solid fa-list"></i><span class="text-menu">Booked list</span></a> -->
+                </div>
+                <div class="menu-logout">
+                    <a href="/logout" class="menu-item"><i class="fa-solid fa-sign-out-alt"></i><span class="text-menu">Logout</span></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- content section -->
+        <section class="main-content">
+
+            <div class="add-new-book" id="addNewBook">
+                <button class="back-btn" onclick="closePopup()"><i class="fa-solid fa-arrow-left-long"></i></button>
+                <div class="from-flex">
+                    <h2 id="ge-text">Add new book</h2>
+                    <form action="/book/add" method="post" enctype="multipart/form-data">
+                        <div class="image-preview">
+                            <h5>Preview book cover</h5>
+                            <img src="" id="coverPreview">
+                            <input type="file" id="cover" name="cover" accept="image/*" onchange="previewImage()">
+                        </div>
+                        <div class="input-group">
+                            <h5>Book title</h5>
+                            <input type="text" name="title" required>
+
+                            <div class="row-input">
+                                <div class="box">
+                                    <h5>Publisher</h5>
+                                    <input type="text" name="publisher" required>
+                                </div>
+                                <div class="box">
+                                    <h5>Author</h5>
+                                    <input type="text" name="author" required>
+                                </div>
+                            </div>
+
+                            <div class="row-input">
+                                <div class="box">
+                                    <h5>ISBN</h5>
+                                    <input type="text" name="isbn" required>
+                                </div>
+                                <div class="box">
+                                    <h5>Category</h5>
+                                    <input type="text" name="category" required>
+                                </div>
+                            </div>
+
+                            <div class="row-input">
+                                <div class="box">
+                                    <h5>Price</h5>
+                                    <input type="number" name="price" required>
+                                </div>
+                                <div class="box">
+                                    <h5>Stock</h5>
+                                    <input type="number" name="qty" required>
+                                </div>
+                            </div>
+
+                            <h5>Description</h5>
+                            <textarea name="description" id="" required></textarea>
+                            <button type="submit" id="newBook">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- feature section -->
+            <div class="feature">
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchInput" name="searchBook" placeholder="Search book name here."
+                        oninput="searchBooks()">
+                </div>
+                <div class="add-book-btn">
+                    <button onclick="openAddBook()">+ Add new book</button>
+                </div>
+            </div>
+
+            <!-- table section -->
+            <div class="table-records">
+                <div class="table-title">
+                    <i class="fa-solid fa-book"></i>
+                    <span class="text-table">Book lists</span>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>book id</th>
+                            <th>title</th>
+                            <th>publisher</th>
+                            <th>author</th>
+                            <th>category</th>
+                            <th>tools</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% books.forEach(book=> { %>
+                            <tr>
+                                <td>
+                                    <%= book._id %>
+                                </td>
+                                <td>
+                                    <%= book.title %>
+                                </td>
+                                <td>
+                                    <%= book.publisher %>
+                                </td>
+                                <td>
+                                    <%= book.author %>
+                                </td>
+                                <td>
+                                    <%= book.category %>
+                                </td>
+                                <td class="tools">
+                                    <a href="#" class="edit-btn" data-book-id="<%= book._id %>"><i
+                                            class="fa-solid fa-pen"></i></a>
+                                    <a href="#" class="delete-btn" data-book-id="<%= book._id %>"><i
+                                            class="fa-solid fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                                <!-- Add more rows as necessary -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <script src="/js/books.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://kit.fontawesome.com/8afef4d5c4.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background: #EEEEEE;
+        }
+
+        .order-history {
+            background: #FFFFFF;
+            margin: 2em 0;
+            border-radius: 15px;
+            height: 100%;
+            box-shadow: 0 2px 4px #9999996b;
+            overflow: hidden;
+        }
+
+        .history-title {
+            /* margin: 20px 0; */
+            font-size: 24px;
+            font-weight: bold;
+            padding: 35px 50px;
+            padding-bottom: 0;
+        }
+
+        .search-filter-bar {
+            display: flex;
+            justify-content: space-between;
+            gap: 2em;
+            margin: 35px 50px;
+        }
+
+        .search-bar {
+            width: 100%;
+            position: relative;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .search-bar input[type="text"] {
+            padding: 10px;
+            padding-left: 55px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .filter-bar select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        table {
+            width: 100%;
+            /* border-collapse: collapse; */
+            margin-bottom: 20px;
+        }
+
+
+        th,
+        td {
+            /* border: 1px solid #ddd; */
+            padding: 8px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            border-bottom: 1px solid #ddd;
+            /* background-color: #f2f2f2; */
+            text-align: center;
+            font-weight: bold;
+        }
+
+        td p:not(:first-child) {
+            border-top: 1px solid #ddd;
+            /* Add a top border to all p tags except the first one */
+            padding-top: 8px;
+            /* Add some spacing between the border and the text */
+            margin-top: 8px;
+            /* Add some spacing to separate paragraphs */
+        }
+
+        td:nth-child(6) {
+            width: 250px;
+            /* Adjust the width for the address column */
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        .center-align {
+            text-align: center;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .search-icon {
+            margin-left: 10px;
+        }
+
+        .no-orders {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NavBar Section -->
+    <nav class="navbar">
+        <div class="container">
+            <section class="navbar-items">
+                <div class="logo">
+                    <a href="/"><img src="/images/assets/logo.png" alt="Logo"></a>
+                </div>
+
+                <div class="search-bar-home">
+                    <div class="input-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search" id="search-input" oninput="searchBooks()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count">
+                            <%= cartCount %>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <% if (user) { %>
+                        <a class="btn-nobg baloo-bhaijaan-2-400" href="/order">Order</a>
+                        <a class="btn-bg baloo-bhaijaan-2-400" href="/logout">Sign out</a>
+                        <% } else { %>
+                            <a class="btn-nobg baloo-bhaijaan-2-400" href="/login">Sign In</a>
+                            <a class="btn-bg baloo-bhaijaan-2-400" href="/register">Sign Up</a>
+                            <% } %>
+                </div>
+            </section>
+        </div>
+    </nav>
+
+    <!-- Order History Section -->
+    <div class="container">
+        <div class="order-history">
+            <h2 class="history-title">Order History</h2>
+
+            <div class="search-filter-bar">
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <input type="text" id="order-search" placeholder="Search Order ID..." oninput="searchOrders()">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+
+                <!-- Filter Dropdown -->
+                <div class="filter-bar">
+                    <select id="status-filter" onchange="filterOrders()">
+                        <option value="all">All</option>
+                        <option value="รอจัดส่ง">รอจัดส่ง</option>
+                        <option value="กำลังจัดส่ง">กำลังจัดส่ง</option>
+                        <option value="จัดส่งสำเร็จ">จัดส่งสำเร็จ</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Order Table -->
+            <table id="order-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Book Title(s)</th>
+                        <th>Quantity</th>
+                        <th>Total Amount</th>
+                        <th>Address Details</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (orders.length> 0) { %>
+                        <% orders.forEach(order=> { %> <!-- Loop through each order -->
+                            <tr>
+                                <td class="center-align">
+                                    <%= order._id %>
+                                </td> <!-- Order ID -->
+                                <td class="center-align">
+                                    <%= order.orderDate.toLocaleDateString() %>
+                                </td> <!-- Order Date -->
+                                <td>
+                                    <% order.items.forEach(item=> { %>
+                                        <p>
+                                            <%= item.title %>
+                                        </p> <!-- Book title -->
+                                        <% }) %>
+                                </td>
+                                <td>
+                                    <% order.items.forEach(item=> { %>
+                                        <p class="center-align">
+                                            <%= item.quantity %>
+                                        </p> <!-- Book quantity -->
+                                        <% }) %>
+                                </td>
+                                <td class="center-align">
+                                    <%= order.totalAmount %> บาท
+                                </td> <!-- Total Amount -->
+                                <td>
+                                    <p><strong>Recipient:</strong>
+                                        <%= order.addressDetails.receiptName %>
+                                    </p> <!-- Recipient -->
+                                    <p><strong>Phone:</strong>
+                                        <%= order.addressDetails.phoneNumber %>
+                                    </p> <!-- Phone Number -->
+                                    <p><strong>Address:</strong>
+                                        <%= order.addressDetails.address %>
+                                    </p> <!-- Address -->
+                                </td>
+                                <td class="center-align">
+                                    <%= order.status %>
+                                </td> <!-- Order status -->
+                            </tr>
+                            <% }) %>
+                                <% } else {%>
+                                    <tr>
+                                        <td colspan="7" class="no-orders">not found orders.</td>
+                                    </tr>
+                                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function filterOrders() {
+            const table = document.getElementById('order-table'); // Ensure you're selecting the right table
+            if (!table) {
+                console.error('Table not found');
+                return; // Exit the function early if table is null
+            }
+
+            const rows = table.getElementsByTagName('tr');
+            const filter = document.getElementById('status-filter').value.trim(); // Make sure it matches your HTML and trim whitespace
+            for (let i = 1; i < rows.length; i++) { // Starting from row index 1 to skip the header
+                const statusCell = rows[i].getElementsByTagName('td')[6]; // Assuming the 7th column is status
+                if (statusCell) {
+                    const status = statusCell.textContent.trim() || statusCell.innerText.trim(); // Trim whitespaces
+                    // If filter is 'all' or the status matches the filter, display the row, otherwise hide it
+                    if (filter === 'all' || status === filter) {
+                        rows[i].style.display = '';
+                    } else {
+                        rows[i].style.display = 'none';
+                    }
+                }
+            }
+        }
+        function searchOrders() {
+            const searchInput = document.getElementById('order-search').value.trim().toLowerCase();
+            const table = document.getElementById('order-table');
+            const rows = table.getElementsByTagName('tr');
+
+            // Loop through table rows (starting from 1 to skip the header row)
+            for (let i = 1; i < rows.length; i++) {
+                const orderIdCell = rows[i].getElementsByTagName('td')[0]; // Assuming the Order ID is in the first column
+
+                if (orderIdCell) {
+                    const orderIdText = orderIdCell.textContent || orderIdCell.innerText;
+
+                    // Check if the search input is a substring of the orderIdText (case-insensitive)
+                    if (orderIdText.toLowerCase().includes(searchInput)) {
+                        rows[i].style.display = '';  // Show the row if it matches
+                    } else {
+                        rows[i].style.display = 'none';  // Hide the row if it doesn't match
+                    }
+                }
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>

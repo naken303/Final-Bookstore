@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Store</title>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://kit.fontawesome.com/8afef4d5c4.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            padding-top: 0!important;
+        }
+        nav {
+            position: relative!important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cart Popup Structure -->
+    <div id="cart-popup-overlay"></div>
+
+    <div id="cart-popup">
+        <div class="cart-popup-header">
+            <h3>Your Cart</h3>
+            <button id="close-cart-popup" class="close-popup-btn">&times;</button>
+        </div>
+        <div id="cart-items">
+            <!-- Cart items will be dynamically inserted here -->
+        </div>
+        <div class="cart-popup-footer">
+            <div class="total-price">
+                <span>Total: </span>
+                <span id="cart-total-price">0 บาท</span>
+            </div>
+            <a href="/checkout" class="confirm-payment-btn">Confirm Payment</a>
+        </div>
+    </div>
+
+
+    <!-- NavBar Section -->
+    <nav class="navbar">
+        <div class="container">
+            <section class="navbar-items">
+                <!-- Logo Section -->
+                <div class="logo">
+                    <a href="/"><img src="/images/assets/logo.png" alt="Logo"></a>
+                </div>
+
+                <!-- Search Bar Section -->
+                <div class="search-bar-home">
+                    <div class="input-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search" id="search-input" oninput="searchBooks()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count"><%= cartCount %></span>
+                    </div>
+                </div>
+                <!-- Button Group Section -->
+                <div class="btn-group">
+                    <% if (user) { %> <!-- Use 'user' from res.locals -->
+                        <a class="btn-nobg baloo-bhaijaan-2-400" href="/order">Order</a>
+                        <a class="btn-bg baloo-bhaijaan-2-400" href="/logout">Sign out</a>
+                    <% } else { %>
+                        <a class="btn-nobg baloo-bhaijaan-2-400" href="/login">Sign In</a>
+                        <a class="btn-bg baloo-bhaijaan-2-400" href="/register">Sign Up</a>
+                    <% } %>
+                </div>
+            </section>
+        </div>
+    </nav>
+
+    <section class="book-detail">
+        <div class="color-bar">
+            <img src="/images/assets/Vector1.png" alt="" id="red">
+            <img src="/images/assets/Vector2.png" alt="" id="yellow">
+        </div>
+    
+        <div class="book-detail">
+            
+            <div class="container">
+                <div class="book-detail-flex">
+                    <div class="cover-btn">
+                        <div class="cover">
+                            <img src="/images/books_cover/<%= book.imageUrl%>" alt="" onerror="this.onerror=null;this.src='/images/books_cover/default_cover.jpg';">
+                        </div>
+                        <button class="b-btn addtocart" onclick="addToCart('<%= book.id %>')"><i class="fas fa-shopping-cart"></i>Add to cart</button>
+                    </div>
+                    <div class="detail">
+                        <div class="history-path">
+                            <a href="/">Home</a> <span class="his-text"> / <%= book.title %> </span>
+                        </div>
+                        <div class="h-detail">
+                            <h2><%= book.title %></h2>
+                            <p>
+                                <%= book.description %>
+                            </p>
+                        </div>
+                        <div class="m-detail">
+                            <h4>infomation</h4>
+                            <ul>
+                                <li><span class="bullet">publisher</span><span class="d-bullet"><%= book.publisher %></span> </li>
+                                <li><span class="bullet">Author</span><span class="d-bullet"><%= book.author %></span> </li>
+                                <li><span class="bullet">ISBN</span><span class="d-bullet"><%= book.isbn %></span> </li>
+                                <li><span class="bullet">Stock</span><span class="d-bullet"><%= book.qty %> copy</span> </li>
+                                <li><span class="bullet">Price</span><span class="d-bullet"><%= book.price %> baht</span> </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="/js/scripts.js"></script>
+</html>

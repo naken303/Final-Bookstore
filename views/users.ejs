@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | User lists</title>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://kit.fontawesome.com/8afef4d5c4.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            overflow: hidden;
+        }
+        #editUserModal {
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+
+        #editUserModal.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-flex-container">
+        <!-- side menu section -->
+        <section class="side-menu">
+            <div class="welcome">
+                <h1>Welcome, admin</h1>
+            </div>
+            <div class="menu">
+                <div class="menu-list">
+                    <a href="/book" class="menu-item"><i class="fa-solid fa-book"></i><span class="text-menu">Book list</span></a>
+                    <a href="/user" class="menu-item active"><i class="fa-solid fa-address-book"></i><span class="text-menu">User list</span></a>
+                    <!-- <a href="#" class="menu-item"><i class="fa-solid fa-list"></i><span class="text-menu">Booked list</span></a> -->
+                </div>
+                <div class="menu-logout">
+                    <a href="/logout" class="menu-item"><i class="fa-solid fa-sign-out-alt"></i><span class="text-menu">Logout</span></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- content section -->
+        <section class="main-content">
+            
+            <div class="add-new-book" id="addNewBook">
+                <button class="back-btn" onclick="closeEditUserModal()"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="from-flex">
+                    <h2>Edit User</h2>
+                    <form action="" method="POST" id="editUserForm">
+                        <div class="input-group">
+                            <h5>First Name</h5>
+                            <input type="text" name="firstname" id="userFirstname" required>
+    
+                            <h5>Last Name</h5>
+                            <input type="text" name="lastname" id="userLastname" required>
+    
+                            <h5>Email</h5>
+                            <input type="email" name="email" id="userEmail" required>
+    
+                            <h5>Role</h5>
+                            <select name="role" id="userRole" required style="display: block;">
+                                <option value="admin">Admin</option>
+                                <option value="user">User</option>
+                            </select>
+    
+                            <button type="submit" id="editUserSave">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- feature section -->
+            <div class="feature">
+                <div class="search-bar long">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchInput" name="searchUser" placeholder="Search user here." oninput="searchUsers()">
+                </div>
+            </div>
+
+            <!-- table section -->
+            <div class="table-records">
+                <div class="table-title">
+                    <i class="fa-solid fa-address-book"></i>
+                    <span class="text-table">User lists</span>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>user id</th>
+                            <th>first name</th>
+                            <th>last name</th>
+                            <th>email</th>
+                            <th>tools</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% users.forEach(user => { %>
+                            <tr>
+                                <td><%= user._id %></td>
+                                <td><%= user.firstname %></td>
+                                <td><%= user.lastname %></td>
+                                <td><%= user.email %></td>
+                                <td class="tools">
+                                    <a href="#" class="edit-btn" data-user-id="<%= user._id %>"><i class="fa-solid fa-pen"></i></a>
+                                    <a href="#" class="delete-btn" data-user-id="<%= user._id %>"><i class="fa-solid fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="/js/users.js"></script>
+</body>
+</html>

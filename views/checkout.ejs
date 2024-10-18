@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Book Store</title>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://kit.fontawesome.com/8afef4d5c4.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background: #EEEEEE;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .summary-box ul {
+            padding-left: 0;
+        }
+
+        .summary-box ul li {
+            list-style-type: none;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cart Popup Structure -->
+    <div id="cart-popup-overlay"></div>
+
+    <div id="cart-popup">
+        <div class="cart-popup-header">
+            <h3>Your Cart</h3>
+            <button id="close-cart-popup" class="close-popup-btn">&times;</button>
+        </div>
+        <div id="cart-items">
+            <!-- Cart items will be dynamically inserted here -->
+        </div>
+        <div class="cart-popup-footer">
+            <div class="total-price">
+                <span>Total: </span>
+                <span id="cart-total-price">0 บาท</span>
+            </div>
+            <a href="/checkout" class="confirm-payment-btn">Confirm Payment</a>
+        </div>
+    </div>
+    <!-- NavBar Section -->
+    <nav class="navbar">
+        <div class="container">
+            <section class="navbar-items">
+                <!-- Logo Section -->
+                <div class="logo">
+                    <a href="/"><img src="/images/assets/logo.png" alt="Logo"></a>
+                </div>
+
+                <!-- Search Bar Section -->
+                <div class="search-bar-home">
+                    <div class="input-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search" id="search-input" oninput="searchBooks()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count"><%= cartCount %></span>
+                    </div>
+                </div>
+
+                <!-- Button Group Section -->
+                <div class="btn-group">
+                    <% if (user) { %>
+                        <a class="btn-nobg baloo-bhaijaan-2-400" href="/order">Order</a>
+                        <a class="btn-bg baloo-bhaijaan-2-400" href="/logout">Sign out</a>
+                    <% } else { %>
+                        <a class="btn-nobg baloo-bhaijaan-2-400" href="/login">Sign In</a>
+                        <a class="btn-bg baloo-bhaijaan-2-400" href="/register">Sign Up</a>
+                    <% } %>
+                </div>
+            </section>
+        </div>
+    </nav>
+
+    <form action="/checkout" method="post" class="checkout">
+        <div class="container">
+            <div class="title">Checkout</div>
+            <div class="checkout-flex">
+                <!-- Book List Section -->
+                <div class="column-flex">
+                    <div class="cart-lists">
+                        <h3>Book lists</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>no</th>
+                                    <th>title</th>
+                                    <th>qty</th>
+                                    <th>price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% cart.forEach((item, index) => { %>
+                                    <tr>
+                                        <td><%= index + 1 %></td>
+                                        <td><%= item.book.title %></td>
+                                        <td><%= item.quantity %></td>
+                                        <td><%= item.book.price * item.quantity %> บาท</td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Payment Plan Selection -->
+                    <div class="payment-select">
+                        <h3>Choose a payment plan</h3>
+                        <div class="ps-flex">
+                            <!-- Credit Card Option -->
+                            <div class="card-select">
+                                <div class="card-img-s">
+                                    <i class="fa-brands fa-cc-visa"></i>
+                                </div>
+                                <div class="card-detail">
+                                    <input type="radio" name="payChoice" id="pay-credit" value="credit-card" checked>
+                                    <div class="card-title-s">Credit card</div>
+                                    <div class="card-description-s">Recommended choice.</div>
+                                </div>
+                            </div>
+
+                            <!-- Pay at Place Option -->
+                            <div class="card-select">
+                                <div class="card-img-s">
+                                    <i class="fa-solid fa-map-location"></i>
+                                </div>
+                                <div class="card-detail">
+                                    <input type="radio" name="payChoice" id="pay-place" value="pay-at-place">
+                                    <div class="card-title-s">Pay at place</div>
+                                    <div class="card-description-s">Pay when the product arrives.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Credit Card Payment Details -->
+                    <div class="payment-credit">
+                        <h3>Payment Detail</h3>
+                        <h4>Please fill out your card account details below.</h4>
+                        <div class="input-group-sec">
+                            <label for="card-number">Card Number</label>
+                            <input type="text" id="card-number" name="cardNumber" required>
+                            <div class="mc-flex">
+                                <div class="mdc-box">
+                                    <label for="expire-date">Expire Date</label>
+                                    <input type="text" id="expire-date" name="expireDate" required>
+                                </div>
+                                <div class="mdc-box">
+                                    <label for="cvc">CVC/CVV</label>
+                                    <input type="text" id="cvc" name="cvc" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address Details -->
+                    <div class="address-detail">
+                        <h3>Address Detail</h3>
+                        <h4>Please fill out your address details below.</h4>
+                        <div class="input-group-sec">
+                            <div class="mc-flex">
+                                <div class="mdc-box">
+                                    <label for="receipt-name">Receipt name</label>
+                                    <input type="text" name="receiptName" id="receipt-name" required>
+                                </div>
+                                <div class="mdc-box">
+                                    <label for="phone-number">Phone number</label>
+                                    <input type="text" name="phoneNumber" id="phone-number" required>
+                                </div>
+                            </div>
+                            <label for="address">Address</label>
+                            <textarea name="address" id="address" required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Section -->
+                <div class="summary-box">
+                    <div class="sum-detail">
+                        <h3>Summary</h3>
+                        <p>Order date: <%= new Date().toLocaleDateString() %> <%= new Date().toLocaleTimeString() %></p>
+                        <h5>Item lists</h5>
+                        <ul>
+                            <% cart.forEach((item) => { %>
+                                <li><span>- <%= item.book.title %></span><span><%= item.book.price * item.quantity %> baht</span></li>
+                            <% }) %>
+                        </ul>
+                        <h5 style="display: flex;"><span>Total price:</span> <span style="margin-left: auto;"><%= totalAmount %> baht</span></h5>
+                    </div>
+                    <div class="confirm-btn-pay">
+                        <button type="submit">Confirm payment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    
+    <script src="/js/scripts.js"></script>
+    <script>
+        // Function to toggle the visibility of the credit card input fields
+        const payCreditOption = document.getElementById('pay-credit');
+        const payPlaceOption = document.getElementById('pay-place');
+        const creditDetails = document.querySelector('.payment-credit');
+
+        payCreditOption.addEventListener('change', toggleCreditDetails);
+        payPlaceOption.addEventListener('change', toggleCreditDetails);
+
+        function toggleCreditDetails() {
+            if (payCreditOption.checked) {
+                creditDetails.classList.remove('hidden');
+                document.getElementById('card-number').setAttribute('required', 'required');
+                document.getElementById('expire-date').setAttribute('required', 'required');
+                document.getElementById('cvc').setAttribute('required', 'required');
+            } else {
+                creditDetails.classList.add('hidden');
+                document.getElementById('card-number').removeAttribute('required');
+                document.getElementById('expire-date').removeAttribute('required');
+                document.getElementById('cvc').removeAttribute('required');
+            }
+        }
+
+        // Ensure credit card section is visible by default
+        toggleCreditDetails();
+    </script>
+</body>
+</html>
