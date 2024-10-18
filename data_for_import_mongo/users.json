@@ -1,0 +1,22 @@
+[{
+  "_id": {
+    "$oid": "670fe78e2c2e8dd3afd5313e"
+  },
+  "firstname": "a",
+  "lastname": "a",
+  "email": "a@a",
+  "password": "$2b$10$RRATB9m6VjxfgIwtckEuQ.h3h/7sYsqXtzD.KmxfECFWjHMO7J6Fe",
+  "role": "admin",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "670fec9087fd0e297ec385f7"
+  },
+  "firstname": "b",
+  "lastname": "b",
+  "email": "b@b",
+  "password": "$2b$10$X0SiQ4ekEPiJzPxLdX7qJecc1qvYU0bN5Ycj4opTzpZl33F3jcGEu",
+  "role": "user",
+  "__v": 0
+}]
