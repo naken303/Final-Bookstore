@@ -5,7 +5,7 @@
 4. สร้าง collection ใน bookstore ดังนี้ 1.books 2.carts 3. orders 4.users
 5. ทำการ import ไฟล์ที่อยู่ใน project folder ที่ชื่อ data_for_import_mongo โดย import ให้ชื่อไฟล์ตรงกับชื่อ collection ที่จะ import
 6. สิทธิ์จะถูกแบ่งออกเป็น 2 สิทธิ์ user และ admin
-  6.1 user จะสามารถ sign up และทำการ login เองได้
+  6.1 user จะสามารถ sign up และทำการ login เองได้ หรือจะใช้ user เริ่มต้นที่มีให้คือ email = "b@b", password = "2"
   6.2 admin เริ่มต้นที่มีให้ email = "a@a", password = "1"
 
 7. พิมพ์ "npm run dev" ใน Terminal ของ vscode เพื่อ run website
