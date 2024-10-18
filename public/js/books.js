@@ -1,6 +1,6 @@
 function searchBooks() {
     const query = document.getElementById('searchInput').value;
-    fetch(`/book/search?query=${query}`, {
+    fetch(`/book/search?q=${query}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
