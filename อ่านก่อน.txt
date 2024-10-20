@@ -1,5 +1,4 @@
-0. ให้ลบ project เก่าทิ้งรวมถึง database อันเก่าและดำเนินการติดตั้งตามขั้นตอนใหม่ ดังนี้
-วิธีการติดตั้ง download zip file ทั้ง project ไปแล้ว แตกไฟล์ ตั้งชื่อ folder ว่า "bookstore" และทำตามลำดับต่อไปนี้
+- วิธีการติดตั้ง download zip file ทั้ง project ไปแล้ว แตกไฟล์ ตั้งชื่อ folder ว่า "bookstore" และทำตามลำดับต่อไปนี้ - 
 1. เปิด Visual Studio Code และ open folder "bookstore"
 2. เปิด Terminal ใน vscode และพิมพ์ว่า npm i จากนั้นรอให้ติดตั้งโดยสมบูรณ์
 3. เปิด mongodb และสร้าง database ชื่อว่า bookstore (หากมีชื่อนี้อยู่แล้วให้ลบ bookstore อันเดิมออก หรือแก้ไข config ที่ folder config file db.js เป็นชื่อ database ที่สร้าง)
