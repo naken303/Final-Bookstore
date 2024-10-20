@@ -2,7 +2,7 @@
 วิธีการติดตั้ง download zip file ทั้ง project ไปแล้ว แตกไฟล์ ตั้งชื่อ folder ว่า "bookstore" และทำตามลำดับต่อไปนี้
 1. เปิด Visual Studio Code และ open folder "bookstore"
 2. เปิด Terminal ใน vscode และพิมพ์ว่า npm i จากนั้นรอให้ติดตั้งโดยสมบูรณ์
-3. เปิด mongodb และสร้าง database ชื่อว่า bookstore (หากมีชื่อนี้อยู่แล้วให้ลบ bookstore อันเดิมออก เพราะการ update ครั้งนี้มีจำนวนหนังสือเพิ่มขึ้น)
+3. เปิด mongodb และสร้าง database ชื่อว่า bookstore (หากมีชื่อนี้อยู่แล้วให้ลบ bookstore อันเดิมออก หรือแก้ไข config เพราะการ update ครั้งนี้มีจำนวนหนังสือเพิ่มขึ้น)
 4. สร้าง collection ใน bookstore ดังนี้ 1.books 2.carts 3. orders 4.users
 5. ทำการ import ไฟล์ที่อยู่ใน project folder ที่ชื่อ data_for_import_mongo โดย import ให้ชื่อไฟล์ตรงกับชื่อ collection ที่จะ import
 6. สิทธิ์จะถูกแบ่งออกเป็น 2 สิทธิ์ user และ admin
