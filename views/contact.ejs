@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Store</title>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://kit.fontawesome.com/8afef4d5c4.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background: #FFF3E9;
+        }
+        .footer-content {
+            padding: 5.1em 0;
+        }
+        .footer-content .heading-f, .footer-content .text-f {
+            text-align: center;
+            line-height: 1.5;
+        }
+        .footer-content .heading-f {
+            font-size: 32px;
+            font-weight: bold;
+            color: #F47A62;
+            margin-bottom: 2em;
+        }
+        .footer-content .text-f {
+            font-size: 21px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cart Popup Structure -->
+    <div id="cart-popup-overlay"></div>
+
+    <div id="cart-popup">
+        <div class="cart-popup-header">
+            <h3>Your Cart</h3>
+            <button id="close-cart-popup" class="close-popup-btn">&times;</button>
+        </div>
+        <div id="cart-items">
+            <!-- Cart items will be dynamically inserted here -->
+        </div>
+        <div class="cart-popup-footer">
+            <div class="total-price">
+                <span>Total: </span>
+                <span id="cart-total-price">0 บาท</span>
+            </div>
+            <a href="/checkout" class="confirm-payment-btn">Confirm Payment</a>
+        </div>
+    </div>
+
+
+    <!-- NavBar Section -->
+    <nav class="navbar">
+        <div class="container">
+            <section class="navbar-items">
+                <!-- Logo Section -->
+                <div class="logo">
+                    <a href="/"><img src="/images/assets/logo.png" alt="Logo"></a>
+                </div>
+
+                <!-- Search Bar Section -->
+                <div class="search-bar-home">
+                    <div class="input-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search" id="search-input" oninput="searchBooks()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count"><%= cartCount %></span>
+                    </div>
+                </div>
+                <!-- Button Group Section -->
+                <div class="btn-group">
+                    <% if (user) { %> <!-- Use 'user' from res.locals -->
+                        <a class="btn-nobg baloo-bhaijaan-2-400" href="/order">Order</a>
+                        <a class="btn-bg baloo-bhaijaan-2-400" href="/logout">Sign out</a>
+                    <% } else { %>
+                        <a class="btn-nobg baloo-bhaijaan-2-400" href="/login">Sign In</a>
+                        <a class="btn-bg baloo-bhaijaan-2-400" href="/register">Sign Up</a>
+                    <% } %>
+                </div>
+            </section>
+        </div>
+    </nav>
+
+    <section class="footer-content">
+        <div class="container">
+            <div class="heading-f">CONTACT</div>
+            <div class="text-f">
+                บริษัท บันลือ พับลิเคชั่นส์ จำกัด 955 ซอยสุทธิพร ถ.ประชาสงเคราะห์ แขวงดินแดง เขตดินแดง กทม. 10400<br>
+                Banlue Publications co.,ltd 955 Soi Sutthiporn Prachasongkroh rd., Dindaeng, Bangkok 10400<br>
+                Tel: +66 2641 9955 ext. 506<br>
+                Fax: +66 2641 9955 ext. 518<br>
+                Email: team@sal.mn
+            </div>
+        </div>
+    </section>
+
+    <section class="footer">    
+        <div class="container">
+            <div class="footer-flex">
+                <img src="/images/assets/logo.png" alt="">
+                <div class="warp-link">
+                    <a href="/aboutus">ABOUT US</a>
+                    <a href="/contact">CONTACT</a>
+                    <a href="/faq">FAQ</a>
+                </div>
+            </div>
+        </div>
+    </section class="footer">
+    <script src="/js/index.js"></script>
+    <script src="/js/scripts.js"></script>
+    <% if (typeof alertMessage !== 'undefined') { %>
+        <script>
+            alert('<%= alertMessage %>');
+        </script>
+        <% delete alertMessage; %> <!-- Clear the alert message from the session -->
+    <% } %>
+</body>
+</html>
