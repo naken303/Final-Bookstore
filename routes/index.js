@@ -41,6 +41,16 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/aboutus', async (req, res) => {
+  res.render('aboutus');
+});
+router.get('/contact', async (req, res) => {
+  res.render('contact');
+});
+router.get('/faq', async (req, res) => {
+  res.render('faq');
+});
+
 router.get('/category/:category', async (req, res) => {
   console.log(req.params.category);
   try {
